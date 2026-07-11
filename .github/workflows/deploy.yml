@@ -1,0 +1,31 @@
+# Bonus A — CI/CD pipeline (.github/workflows/deploy.yml)
+#
+# TODO: Implement a lint -> test -> deploy workflow.
+#   - lint:   ruff check on agent/ and client/
+#   - test:   a smoke test that imports and compiles the graph
+#   - deploy: ONLY on push to main; log the model, register a new UC version,
+#             and update the serving endpoint. Use GitHub Secrets for
+#             DATABRICKS_HOST / DATABRICKS_TOKEN. Add a workflow_dispatch trigger.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: install uv, sync deps, run `ruff check` and the smoke test
+
+  deploy:
+    needs: lint-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: install deps and run `python deployment/deploy.py` with secrets
