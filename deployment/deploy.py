@@ -202,3 +202,5 @@ def create_or_update_endpoint(uc_name: str, version: str) -> str:
 if __name__ == "__main__":
     name, ver = log_and_register()
     create_or_update_endpoint(name, ver)
+    print(f"::notice::Deployed model {name} version {ver}")
+    print(f"::notice::Endpoint status: READY at {url}")
