@@ -103,9 +103,9 @@ TODO: graph architecture, routing, deployment choices.
 
 ### Bonus A — CI/CD (if attempted)
 1. Why should the deploy step only run on `main` and not on feature branches?
-   - TODO
+   - Deploying only from main ensures only reviewed and tested code reaches production. Feature branches may contain incomplete or experimental changes that should not update the serving endpoint.
 2. What would you add to this pipeline to prevent deploying a model that performs worse than the current version? Describe the gate.
-   - TODO
+   - Add an evaluation gate that runs the new model on a validation dataset and compares metrics against the current production model. Only deploy if the new model meets or exceeds predefined performance thresholds.
 
 ### Bonus B — `databricks-agents` SDK (if attempted)
 1. Compare the `agents.deploy()` approach with the manual MLflow + CLI approach from Part 2. What control do you gain or lose with each?
