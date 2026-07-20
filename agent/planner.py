@@ -8,17 +8,15 @@ TODO: Implement `make_planner(llm)` returning a node that:
 """
 
 from __future__ import annotations
-from langchain.messages import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from agent.state import AnalystState
+from agent.prompts import PLANNER_PROMPT
 
 import json
 
 def make_planner(llm):
     def planner(state: AnalystState) -> dict:
-        system_prompt = """
-        You are planner that receives user query and produces a list of 2-5 atomic steps.
-        Only output JSON list of step strings
-        """
+        system_prompt = PLANNER_PROMPT
 
         user_message = state["messages"][-1].content
 

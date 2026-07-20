@@ -73,29 +73,33 @@ TODO: graph architecture, routing, deployment choices.
 
 ### Task 1.4 — RAG Agent
 1. The RAG agent retrieves for a single decomposed step, not the full user query. How does this affect retrieval quality compared to retrieving for the original question?
-   - TODO
+   - The decomposed step is more specific focused, leading to better retrieval quality, The original might be too broad.
 2. If the planner produces a vague step like "find relevant financial data," how would you improve the retrieval query before sending it to the vector store?
-   - TODO
+   - I would rewrite the step before retrieval using a small LLM call that takes both the vague step and the original user query as context.
 
 ### Task 2.1 — Model Definition
 1. Why does `models-from-code` require a self-contained file? What breaks if you reference external state (e.g., a database running only on your laptop)?
-   - TODO
+   - MLflow re-executes agent_model.py during logging and again in the serving container, so it must run successfully in any environment. References to local files, services, or environment-specific state can cause deployment or runtime failures.
+
 2. Your model calls a managed Vector Search index at inference time rather than embedding documents into the container image. What are the tradeoffs (freshness, cold-start size, latency, failure modes) of querying an external index vs. baking the corpus into the model artifact?
-   - TODO
+   - An external Vector Search index keeps data up to date and the model artifact small, but adds network latency and dependency on the index's availability. Baking the corpus into the model removes that dependency but increases artifact size and makes the data stale.
 
 ### Task 2.3 — Serving Endpoint
 1. Why must you pass `DATABRICKS_TOKEN` as an environment variable to the endpoint, even though it's already authenticated to serve models?
-   - TODO
+   - The serving endpoint's authentication only handles incoming requests; the model still needs its own credentials to call Databricks services like Vector Search and LLM endpoints. Without the environment variables, those API calls fail.
 2. What happens to in-flight requests when you deploy a new model version to the same endpoint? How does Databricks handle the transition?
-   - TODO
+   - Databricks performs a rolling update by bringing up the new model version before shifting traffic. Existing requests continue on the old version, while new requests are routed to the new version once it is healthy.
+
 
 ### Task 3.2 — Client
 1. Why is exponential backoff better than fixed-interval retries for a model serving endpoint?
-   - TODO
+   - Exponential backoff gradually increases the delay between retries, giving the endpoint time to recover or scale up. It also prevents many clients from retrying simultaneously and overloading the service further.
+
 2. Your client has a `max_retries` parameter. What is the danger of setting it too high in a production system with many concurrent users?
-   - TODO
+   - A high retry limit can create a retry storm, where many clients repeatedly hit an already failing endpoint. This increases load, delays recovery, and makes users wait longer before receiving an error.
+
 3. When would you choose `ask_streaming()` over `ask()`? Give a concrete UX example.
-   - TODO
+   - Use ask_streaming() for chat interfaces where users benefit from seeing responses appear progressively, improving perceived responsiveness. Use ask() for scripts or batch jobs that only need the final response.
 
 ### Bonus A — CI/CD (if attempted)
 1. Why should the deploy step only run on `main` and not on feature branches?

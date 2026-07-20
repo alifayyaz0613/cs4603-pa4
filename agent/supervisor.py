@@ -8,8 +8,9 @@ TODO:
 """
 
 from __future__ import annotations
-from langchain.messages import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from agent.state import AnalystState
+from agent.prompts import SUPERVISOR_PROMPT
 
 RAG = "rag_agent"
 MCP = "mcp_tools"
@@ -22,13 +23,7 @@ def make_supervisor(llm):
         if state["current_step_index"] >= len(state["plan"]):
             return {"next_agent": "synthesizer"}
         
-        system_prompt = f"""
-        You are supervisor. Classify the steps as either:
-        {RAG} - if it requires looking up facts from documents
-        {MCP} - if it requires calculation or numerical analysis
-
-        reply with a single word only {RAG} or {MCP}
-        """
+        system_prompt = SUPERVISOR_PROMPT.format(rag=RAG, mcp=MCP)
 
         current_step = state["plan"][state["current_step_index"]]
 
