@@ -89,13 +89,13 @@ def make_mcp_node(tools, llm):
 def build_graph(llm=None, retriever=None, tools=None):
     # raise NotImplementedError("Task 1.7: wire and compile the full graph")
     from config import get_chat_llm
-    from rag.store import get_retriever
+    # from rag.store import get_retriever
 
     if llm is None:
         llm = get_chat_llm()
     
-    if retriever is None:
-        retriever = get_retriever()
+    # if retriever is None:
+    #     retriever = get_retriever()
 
     planner = make_planner(llm)
     supervisor = make_supervisor(llm)
