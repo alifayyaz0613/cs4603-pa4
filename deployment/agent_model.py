@@ -31,9 +31,9 @@ if missing:
 
 settings = get_settings()
 llm = get_chat_llm()
-retriever = get_retriever()
+# retriever = get_retriever()
 
-graph = build_graph(llm=llm, retriever=retriever, tools=None)
+graph = build_graph(llm=llm, retriever=None, tools=None)
 
 mlflow.models.set_model(graph)
 

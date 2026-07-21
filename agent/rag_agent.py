@@ -25,10 +25,15 @@ def format_docs(docs) -> str:
 def make_rag_agent(retriever, llm):
     def rag_agent(state: AnalystState) -> dict:
         # raise NotImplementedError("Task 1.4: implement the RAG node")
+        if retriever is None:
+            from rag.store import get_retriever
+            retriever_instance = get_retriever()
+        else:
+            retriever_instance = retriever
 
         current_step = state["plan"][state["current_step_index"]]
 
-        docs = retriever.invoke(current_step)
+        docs = retriever_instance.invoke(current_step)
 
         if not docs:
             result = f"Step: {current_step}\n Result: Not found in documents"
