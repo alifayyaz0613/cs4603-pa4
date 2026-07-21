@@ -8,11 +8,14 @@ TODO: Implement `make_planner(llm)` returning a node that:
 """
 
 from __future__ import annotations
-from langchain_core.messages import SystemMessage, HumanMessage
-from agent.state import AnalystState
-from agent.prompts import PLANNER_PROMPT
 
 import json
+
+from langchain_core.messages import HumanMessage, SystemMessage
+
+from agent.prompts import PLANNER_PROMPT
+from agent.state import AnalystState
+
 
 def make_planner(llm):
     def planner(state: AnalystState) -> dict:
@@ -27,7 +30,7 @@ def make_planner(llm):
 
         try:
             plan = json.loads(response.content)
-        except:
+        except Exception:
             plan = [state['messages'][-1].content]
         
         return {

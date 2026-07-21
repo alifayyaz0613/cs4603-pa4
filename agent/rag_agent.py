@@ -10,9 +10,11 @@ Reuse `rag/store.py::get_retriever()` so local and deployed retrieval match.
 
 from __future__ import annotations
 
-from agent.state import AnalystState
+from langchain_core.messages import HumanMessage, SystemMessage
+
 from agent.prompts import RAG_EXTRACT_PROMPT
-from langchain_core.messages import SystemMessage, HumanMessage
+from agent.state import AnalystState
+
 
 def format_docs(docs) -> str:
     return "\n\n".join([
@@ -37,7 +39,7 @@ def make_rag_agent(retriever, llm):
 
             response = llm.invoke([
                 SystemMessage(content=system_prompt),
-                HumanMessage(content=f"Context {docs} \n\n Question: {current_step}")
+                HumanMessage(content=f"Context {formatted_doc} \n\n Question: {current_step}")
             ])
 
             result = response.content

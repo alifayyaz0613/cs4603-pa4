@@ -12,8 +12,8 @@ TODO: Implement `DocumentAnalystClient` and `AnalystClientError` per Task 3.1:
 
 from __future__ import annotations
 
-from collections.abc import Iterator
 import os
+from collections.abc import Iterator
 
 
 class AnalystClientError(Exception):
@@ -40,6 +40,7 @@ class DocumentAnalystClient:
 
     def ask(self, question: str) -> str:
         import time
+
         import requests
 
         url = f"{self.host}/serving-endpoints/{self.endpoint_name}/invocations"
@@ -56,7 +57,7 @@ class DocumentAnalystClient:
                 response = requests.post(url, headers=headers, json=payload, timeout=self.timeout)
             except requests.exceptions.Timeout:
                 elapsed = time.monotonic() - start
-                raise TimeoutError(f"Request timed out after {elapsed:.1f}s (limit: {self.timeout}s)")
+                raise TimeoutError(f"Request timed out after {elapsed:.1f}s (limit: {self.timeout}s)") from None
 
             if response.status_code == 200:
                 data = response.json()
@@ -82,6 +83,7 @@ class DocumentAnalystClient:
 
     def ask_streaming(self, question: str) -> Iterator[str]:
         import json
+
         import requests
 
         url = f"{self.host}/serving-endpoints/{self.endpoint_name}/invocations"
@@ -93,7 +95,7 @@ class DocumentAnalystClient:
                 url, headers=headers, json=payload, timeout=self.timeout, stream=True
             )
         except requests.exceptions.Timeout:
-            raise TimeoutError(f"Request timed out after {self.timeout}s")
+            raise TimeoutError(f"Request timed out after {self.timeout}s") from None
 
         if response.status_code != 200:
             raise AnalystClientError(
