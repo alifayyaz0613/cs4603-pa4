@@ -2,7 +2,7 @@
 
 ## Unity Catalog Functions as Governed Tools
 
-> Part of **CS 4603 Extra-Credit Assignment 1**. Start here after reading `../tutorials/uc-function-tools.md`.
+> Part of **CS 4603 Extra-Credit Assignment 1**. Start here after reading [`../tutorials/uc-function-tools.md`](../tutorials/uc-function-tools.md).
 > ← Back to the [overview](../README.md) · Next: [Part 2 — Genie](part-2-genie-structured-data.md)
 
 ---
